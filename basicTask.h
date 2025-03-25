@@ -17,7 +17,7 @@ public:
         completed = new bool(Pcompleted);
     }
 
-    ~Basic_task() {
+    virtual ~Basic_task() {
         delete name;
         delete category;
         delete completed;

@@ -8,4 +8,5 @@ int main() {
     string c = "category";
     Basic_task a(n, c, false);
     a.show();
+    cout << "\033[2J\033[H";
 }
