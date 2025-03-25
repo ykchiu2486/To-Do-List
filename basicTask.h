@@ -17,14 +17,33 @@ public:
         completed = new bool(Pcompleted);
     }
 
+    Basic_task(const Basic_task& other) {
+        name = new std::string(*other.name);
+        category = new std::string(*other.category);
+        completed = new bool(*other.completed);
+    }
+
+    Basic_task& operator=(const Basic_task& other) {
+        if (this != &other) {
+            delete name;
+            delete category;
+            delete completed;
+
+            name = new std::string(*other.name);
+            category = new std::string(*other.category);
+            completed = new bool(*other.completed);
+        }
+        return *this;
+    }
+
     virtual ~Basic_task() {
         delete name;
         delete category;
         delete completed;
     }
 
-    void show() {
-        std::cout << *name << "\t" << *category << "\t" << (*completed ? "true" : "false") << "\n";
+    void write(std::ofstream &out) {
+        out << *name << " " << *category << " " << *completed << "\n";
     }
 };
 
