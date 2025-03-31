@@ -78,6 +78,7 @@ public:
         for(auto i : tasks) {
             i->write(file);
         }
+        file.close();
     }
 };
 #endif //FILEIO_H

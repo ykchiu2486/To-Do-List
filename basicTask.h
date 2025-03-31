@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 class Basic_task {
 protected:
@@ -43,7 +44,7 @@ public:
     }
 
     void write(std::ofstream &out) {
-        out << *name << " " << *category << " " << *completed << "\n";
+        out << (*name) << " " << (*category) << " " << (*completed) << "\n";
     }
 };
 

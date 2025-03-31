@@ -8,6 +8,10 @@
 #include "FileIO.h"
 using std::cout;
 
+void seperator() {
+    cout << "-------------------------------------------------------------------\n";
+}
+
 class Banner {
 private:
     void bigTitle() {
@@ -19,13 +23,10 @@ private:
         cout << "   ╚═╝    ╚═════╝ ╚═════╝  ╚═════╝     ╚══════╝╚═╝╚══════╝   ╚═╝   \n";
     }
 
-    void seperator() {
-        cout << "-------------------------------------------------------------------\n";
-    }
-
     void nowDate() {
-        Date now;
-        now.show();
+        Date* newDate = new Date;
+        newDate->show();
+        delete newDate;
     }
 
 public:
@@ -34,17 +35,21 @@ public:
         seperator();
         cout << "Now time: ";
         nowDate();
+        cout << "\n";
         seperator();
     }
 };
 
 class Stage {
-private:
-
 public:
     void init() {
-        Banner banner;
-        banner.show();
+        Banner* banner = new Banner;
+        banner->show();
+        delete banner;
+    }
+
+    void showTask(AllTasks* tasks ) {
+        tasks->showAll();
     }
 
     void clear() {
