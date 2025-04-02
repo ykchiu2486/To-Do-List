@@ -46,7 +46,7 @@ public:
     }
 
     void write(std::ofstream &out) {
-        out << (*name) << " " << (*category) << " " << (*completed) << "\n";
+        out << (*name) << "\n" << (*category) << " " << (*completed) << "\n";
     }
 
     virtual void show(bool notice = false) {

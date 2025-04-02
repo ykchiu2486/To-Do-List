@@ -16,44 +16,43 @@ public:
     std::vector<MoreTask*> read() {
         std::ifstream file(this->filename);
         if (!file.good()) {
-            file.close();
+            std::cerr << "Can't open file!\n" << std::endl;
             return {};
         }
-
+    
         int taskCount;
-        if (!(file >> taskCount)) return {};
-
+        file >> taskCount;
+        file.ignore();  
+    
         std::vector<MoreTask*> tasks;
-        tasks.reserve(taskCount);
-
         while (taskCount--) {
             std::string name, category;
             bool completed;
             int y, m, d, h, priority, status, subtaskCount;
-
-            if (!(file >> name >> category >> completed >> y >> m >> d >> h >> priority >> status >> subtaskCount)) {
-                break;
+    
+            std::getline(file >> std::ws, name);
+    
+            if (!(file >> category >> completed >> y >> m >> d >> h >> priority >> status >> subtaskCount)) {
+                std::cerr << "Fail to read tasks\n" << std::endl;
+                exit(1);
             }
-
-            Date deadline(y, m, d, h);
+            file.ignore(); 
+    
             std::vector<Basic_task*> subtasks;
-            
             while (subtaskCount--) {
                 std::string subName, subCategory;
-                bool subCo;
-                
-                if (!(file >> subName >> subCategory >> subCo)) {
-                    break;
+                bool subCompleted;
+                std::getline(file >> std::ws, subName);
+                if (!(file >> subCategory >> subCompleted)) {
+                    std::cerr << "Fail to read subtasks!\n" << std::endl;
+                    exit(1);
                 }
-
-                Basic_task* st = new Basic_task(subName, subCategory, subCo);
-                subtasks.push_back(st);
+                file.ignore();  
+                subtasks.push_back(new Basic_task(subName, subCategory, subCompleted));
             }
-
-            MoreTask* task = new MoreTask(name, category, completed, deadline, priority, status, subtasks);
-            tasks.push_back(task);
+    
+            tasks.push_back(new MoreTask(name, category, completed, Date(y, m, d, h), priority, status, subtasks));
         }
-        file.close();
         return tasks;
     }
 };

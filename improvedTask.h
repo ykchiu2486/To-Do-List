@@ -10,6 +10,7 @@
 #include <sstream>
 #include <string>
 #include <limits>
+#include <algorithm>
 
 using namespace std;
 
@@ -64,7 +65,7 @@ public:
     }
 
     void write(std::ofstream& out) {
-        out << *name << " " << *category << " " << (*completed ? "1" : "0") << " ";
+        out << *name << "\n" << *category << " " << (*completed ? "1" : "0") << " ";
         deadline.write(out);
         out << " " << priority << " " << status << " " << subTasks.size() << "\n";
         for (auto task : subTasks) {
@@ -108,7 +109,12 @@ public:
         std::cin >> choice;
 
         switch(choice) {
-            case 1: { std::cout << "New Name: "; std::cin >> *name; break; }
+            case 1: { 
+                std::cout << "New Name: "; 
+                std::cin.ignore();  
+                std::getline(std::cin, *name); 
+                break; 
+            }            
             case 2: { std::cout << "New Category: "; std::cin >> *category; break; }
             case 3: { 
                 int comp; 
@@ -163,7 +169,8 @@ public:
         std::string tempName, tempCategory;
         int comp;
         std::cout << "Enter task name: ";
-        std::cin >> tempName;
+        std::cin.ignore();  
+        std::getline(std::cin, tempName); 
         std::cout << "Enter task category: ";
         std::cin >> tempCategory;
         std::cout << "Is the task completed? (1: Yes, 0: No): ";
@@ -196,7 +203,8 @@ public:
             std::string stName, stCategory;
             int stComp;
             std::cout << "Enter subtask name: ";
-            std::cin >> stName;
+            std::cin.ignore();  
+            std::getline(std::cin, stName); 
             std::cout << "Enter subtask category: ";
             std::cin >> stCategory;
             std::cout << "Is the subtask completed? (1: Yes, 0: No): ";
@@ -295,7 +303,6 @@ public:
     void showByFilter() {
         cout << "Filter by (1: Category, 2: Priority, 3: Status): ";
         
-        // 读取多选过滤条件
         vector<int> filters;
         string input;
         cin.ignore();
@@ -307,7 +314,6 @@ public:
                 filters.push_back(filter);
         }
 
-        // 收集过滤参数
         string categoryFilter;
         int priorityFilter = -1;
         int statusFilter = -1;
@@ -337,7 +343,6 @@ public:
             }
         }
 
-        // 显示过滤结果
         cout << "\nFiltered Results:\n";
         std::cout << std::left
                   << std::setw(10) << "Index"
@@ -367,6 +372,16 @@ public:
                 task->show((task->getDeadline() - now <= 24));
             }
         }
+    }
+
+    void sort() {
+        std::sort(alltask.begin(), alltask.end(), [](MoreTask* a, MoreTask* b) {
+            if (a->getPriority() != b->getPriority()) {
+                return a->getPriority() < b->getPriority();
+            } else {
+                return (a->getDeadline() - b->getDeadline()) < 0;
+            }
+        });
     }
 };
 

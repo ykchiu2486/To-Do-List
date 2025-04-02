@@ -36,6 +36,7 @@ int main() {
             MoreTask* nt = new MoreTask;
             nt->makeNew();
             alltasks->add(nt);
+            alltasks->sort();
             stage->clear();
         }
 
@@ -46,6 +47,7 @@ int main() {
             stage->banner();
             (*alltasks)[*index]->modify();
             stage->clear();
+            alltasks->sort();
             delete index;
         }
 
@@ -54,6 +56,7 @@ int main() {
             cin >> *index;
             alltasks->deleteTask(*index);
             stage->clear();
+            alltasks->sort();
             delete index;
         }
         
