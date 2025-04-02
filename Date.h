@@ -55,7 +55,6 @@ public:
         std::cout << year << "-" << month << "-" << day << " " << hour << ":00"; 
     }
 
-    // 修改此函式，讓它接受 std::ostream 以便同時支援 ofstream 與 ostringstream
     void write(std::ostream& out) {
         out << year << " " << month << " " << day << " " << hour << " "; 
     }

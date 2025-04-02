@@ -5,14 +5,9 @@
 #include <iostream>
 #include "improvedTask.h"
 #include "Date.h"
-#include "FileIO.h"
 using std::cout;
 
-void seperator() {
-    cout << "-------------------------------------------------------------------\n";
-}
-
-class Banner {
+class Stage {
 private:
     void bigTitle() {
         cout << "████████╗ ██████╗ ██████╗  ██████╗     ██╗     ██╗███████╗████████╗\n";
@@ -29,23 +24,18 @@ private:
         delete newDate;
     }
 
+    void seperator() {
+        std::cout << std::string(120, '-') << "\n";
+    }
+
 public:
-    void show() {
+    void banner() {
         bigTitle();
         seperator();
-        cout << "Now time: ";
+        cout << "Now: ";
         nowDate();
         cout << "\n";
         seperator();
-    }
-};
-
-class Stage {
-public:
-    void init() {
-        Banner* banner = new Banner;
-        banner->show();
-        delete banner;
     }
 
     void showTask(AllTasks* tasks ) {
@@ -54,6 +44,11 @@ public:
 
     void clear() {
         cout << "\033[2J\033[H";
+    }
+
+    void commandLine() {
+        seperator();
+        cout << "Your command: ";
     }
 };
 #endif //STAGE_H

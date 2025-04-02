@@ -1,19 +1,96 @@
 #include "improvedTask.h"
+#include "Stage.h"
 #include <iostream>
+#include "FileIO.h"
+#include <vector>
+using namespace std;
+
+AllTasks* read() {
+    Reader* reader = new Reader("tasks.txt");
+    AllTasks* alltasks = new AllTasks(reader->read());
+    delete reader;
+    return alltasks;
+}
+
+void write(AllTasks* alltasks) {
+    Writer* writer = new Writer("tasks.txt");
+    writer->write(alltasks->insideData());
+}
+
+void init(Stage* stage, AllTasks* alltasks) {
+    stage->banner();
+    stage->showTask(alltasks);
+    stage->commandLine();
+}
 
 int main() {
-    AllTasks taskList;
+    AllTasks* alltasks = read();
+    Stage* stage = new Stage;
 
-    MoreTask* task1 = new MoreTask("Project A", "Work", false, Date(2025, 4, 10, 14), 1, 2, {});
-    MoreTask* task2 = new MoreTask("Grocery Shopping", "Personal", false, Date(2025, 4, 5, 18), 2, 3, {});
-    MoreTask* task3 = new MoreTask("Exercise", "Health", true, Date(2025, 4, 3, 7), 3, 1, {});
+    while(true) {
+        init(stage, alltasks);
+        string testcommand; cin >> testcommand;
+        if(testcommand == "add") {
+            stage->clear();
+            stage->banner();
+            MoreTask* nt = new MoreTask;
+            nt->makeNew();
+            alltasks->add(nt);
+            stage->clear();
+        }
 
-    taskList.add(task1);
-    taskList.add(task2);
-    taskList.add(task3);
+        else if(testcommand == "mod") {
+            int* index = new int;
+            cin >> *index;
+            stage->clear();
+            stage->banner();
+            (*alltasks)[*index]->modify();
+            stage->clear();
+            delete index;
+        }
 
-    std::cout << "Task List:\n";
-    taskList.showAll();
+        else if(testcommand == "rm") {
+            int* index = new int;
+            cin >> *index;
+            alltasks->deleteTask(*index);
+            stage->clear();
+            delete index;
+        }
+        
+        else if(testcommand == "show") {
+            int* index = new int;
+            cin >> *index;
+            stage->clear();
+            stage->banner();
+            (*alltasks)[*index]->showThisTask();
+            cout << "\nPress Enter to continue...";
+            cin.ignore();
+            cin.get();
+            stage->clear();
+            delete index;
+        }
 
-    return 0;
+        else if(testcommand == "filter") {
+            stage->clear();
+            stage->banner();
+            alltasks->showByFilter();
+            
+            cout << "\nPress Enter to continue...";
+            cin.ignore();
+            cin.get();
+            
+            stage->clear();
+        }
+
+        else if(testcommand == "exit") {
+            write(alltasks);
+            break;
+        }
+        
+        else {
+            stage->clear();
+        }
+    }
+    delete stage;
+    delete alltasks;
 }
