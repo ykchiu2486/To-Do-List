@@ -16,7 +16,7 @@ public:
     std::vector<MoreTask*> read() {
         std::ifstream file(this->filename);
         if (!file.good()) {
-            std::cerr << "Can't open file!\n" << std::endl;
+            std::cerr << "Add a new task!\n" << std::endl;
             return {};
         }
     
