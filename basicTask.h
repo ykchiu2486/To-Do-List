@@ -1,15 +1,64 @@
 #ifndef BASICTASK_H
 #define BASICTASK_H
-
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <limits>
 
 class Basic_task {
 protected:
     std::string* name;
     std::string* category;
     bool* completed;
+
+    std::string safeStringInput(const std::string& prompt) {
+        std::string input;
+        std::cout << prompt;
+        
+        // Only clear the buffer if the last operation was numeric input
+        if (std::cin.peek() == '\n') {
+            std::cin.ignore();
+        }
+        
+        std::getline(std::cin, input);
+        return input;
+    }
+
+    bool safeBoolInput(const std::string& prompt) {
+        int value;
+        bool validInput = false;
+        
+        do {
+            std::cout << prompt;
+            if (std::cin >> value && (value == 0 || value == 1)) {
+                validInput = true;
+            } else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid input. Please enter 0 (No) or 1 (Yes).\n";
+            }
+        } while (!validInput);
+        
+        return (value == 1);
+    }
+
+    int safeIntInput(const std::string& prompt, int min, int max) {
+        int value;
+        bool validInput = false;
+        
+        do {
+            std::cout << prompt;
+            if (std::cin >> value && value >= min && value <= max) {
+                validInput = true;
+            } else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid input. Please enter a integer between " << min << " and " << max << ".\n";
+            }
+        } while (!validInput);
+        
+        return value;
+    }
 
 public:
     Basic_task(std::string Pname, std::string Pcategory, bool Pcompleted) {
@@ -24,14 +73,17 @@ public:
         completed = new bool(*other.completed);
     }
 
-    Basic_task() {}
+    Basic_task() {
+        name = new std::string("");
+        category = new std::string("");
+        completed = new bool(false);
+    }
 
     Basic_task& operator=(const Basic_task& other) {
         if (this != &other) {
             delete name;
             delete category;
             delete completed;
-
             name = new std::string(*other.name);
             category = new std::string(*other.category);
             completed = new bool(*other.completed);
@@ -50,35 +102,28 @@ public:
     }
 
     virtual void show(bool notice = false) {
-        std::cout << "  [Basic_task] Name: " << *name 
-                  << ", Category: " << *category 
+        std::cout << " [Basic_task] Name: " << *name
+                  << ", Category: " << *category
                   << ", Completed: " << (*completed ? "Yes" : "No") << "\n";
     }
 
-    void mod() {
+    virtual void modify() {
         std::cout << "Modify Basic Task:\n";
         std::cout << "1. Name\n2. Category\n3. Completion Status\n0. Cancel\n";
-        int choice;
-        std::cout << "Your choice: ";
-        std::cin >> choice;
+        
+        int choice = safeIntInput("Your choice: ", 0, 3);
+        
         switch (choice) {
             case 1: {
-                std::cout << "New Name: ";
-                std::cin.ignore();
-                std::getline(std::cin, *name);
+                *name = safeStringInput("New Name: ");
                 break;
             }
             case 2: {
-                std::cout << "New Category: ";
-                std::cin.ignore();
-                std::getline(std::cin, *category);
+                *category = safeStringInput("New Category: ");
                 break;
             }
             case 3: {
-                int comp;
-                std::cout << "Completed (1: Yes, 0: No): ";
-                std::cin >> comp;
-                *completed = (comp == 1);
+                *completed = safeBoolInput("Completed (1: Yes, 0: No): ");
                 break;
             }
             case 0:
@@ -88,5 +133,4 @@ public:
         }
     }
 };
-
 #endif // BASICTASK_H

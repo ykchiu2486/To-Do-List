@@ -14,6 +14,24 @@
 
 using namespace std;
 
+int safeIntInput(const string& prompt, int min, int max) {
+    int value;
+    bool validInput = false;
+    
+    do {
+        cout << prompt;
+        if (cin >> value && value >= min && value <= max) {
+            validInput = true;
+        } else {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter an integer between " << min << " and " << max << ".\n";
+        }
+    } while (!validInput);
+    
+    return value;
+}
+
 class MoreTask : public Basic_task {
 protected:
     Date deadline;
@@ -101,37 +119,56 @@ public:
                     << "\n";
     }
 
-    void modify() {
+    void modify() override{
         std::cout << "Select field to modify:\n";
         std::cout << "1. Name\n2. Category\n3. Completion Status\n4. Deadline\n5. Priority\n6. Status\n7. Modify Subtasks\n0. Cancel\n";
-        int choice;
-        std::cout << "Your choice: ";
-        std::cin >> choice;
+        
+        int choice = safeIntInput("Your choice: ", 0, 7);
 
         switch(choice) {
             case 1: { 
-                std::cout << "New Name: "; 
-                std::cin.ignore();  
-                std::getline(std::cin, *name); 
+                *name = safeStringInput("New Name: "); 
                 break; 
             }            
-            case 2: { std::cout << "New Category: "; std::cin >> *category; break; }
+            case 2: { 
+                *category = safeStringInput("New Category: "); 
+                break; 
+            }
             case 3: { 
-                int comp; 
-                std::cout << "Completed (1: Yes, 0: No): "; 
-                std::cin >> comp; 
+                int comp = safeIntInput("Completed (1: Yes, 0: No): ", 0, 1);
                 *completed = (comp == 1); 
                 break; 
             }
             case 4: { 
-                int y, m, d, h; 
-                std::cout << "New Deadline (YYYY MM DD HH): "; 
-                std::cin >> y >> m >> d >> h; 
-                deadline = Date(y, m, d, h); 
+                int y, m, d, h;
+                cout << "New Deadline (YYYY MM DD HH): ";
+                bool validDate = false;
+                do {
+                    if (cin >> y >> m >> d >> h) {
+                        if (y >= 2000 && y <= 2100 && m >= 1 && m <= 12 && 
+                            d >= 1 && d <= 31 && h >= 0 && h <= 23) {
+                            validDate = true;
+                        } else {
+                            cout << "Invalid date or time. Please try again: ";
+                        }
+                    } else {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid input. Format: YYYY MM DD HH: ";
+                    }
+                } while (!validDate);
+                
+                deadline = Date(y, m, d, h);
                 break; 
             }
-            case 5: { std::cout << "New Priority (1: High, 2: Medium, 3: Low): "; std::cin >> priority; break; }
-            case 6: { std::cout << "New Status (1: Done, 2: In Progress, 3: Not Started): "; std::cin >> status; break; }
+            case 5: { 
+                priority = safeIntInput("New Priority (1: High, 2: Medium, 3: Low): ", 1, 3);
+                break; 
+            }
+            case 6: { 
+                status = safeIntInput("New Status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
+                break; 
+            }
             case 7: {
                 if (subTasks.empty()) {
                     std::cout << "No subtasks available to modify.\n";
@@ -141,13 +178,13 @@ public:
                         std::cout << i + 1 << ". ";
                         subTasks[i]->show();
                     }
-                    int subChoice;
-                    std::cout << "Enter subtask number (or 0 to cancel): ";
-                    std::cin >> subChoice;
-                    if (subChoice > 0 && subChoice <= subTasks.size()) {
-                        subTasks[subChoice - 1]->mod();
+                    
+                    int subChoice = safeIntInput("Enter subtask number (or 0 to cancel): ", 0, static_cast<int>(subTasks.size()));
+                    
+                    if (subChoice > 0) {
+                        subTasks[subChoice - 1]->modify();
                     } else {
-                        std::cout << "Invalid choice.\n";
+                        std::cout << "Operation cancelled.\n";
                     }
                 }
                 break;
@@ -166,27 +203,32 @@ public:
         }
         subTasks.clear();
 
-        std::string tempName, tempCategory;
-        int comp;
-        std::cout << "Enter task name: ";
-        std::cin.ignore();  
-        std::getline(std::cin, tempName); 
-        std::cout << "Enter task category: ";
-        std::cin >> tempCategory;
-        std::cout << "Is the task completed? (1: Yes, 0: No): ";
-        std::cin >> comp;
+        std::string tempName = safeStringInput("Enter task name: ");
+        std::string tempCategory = safeStringInput("Enter task category: ");
+        int comp = safeIntInput("Is the task completed? (1: Yes, 0: No): ", 0, 1);
         bool tempCompleted = (comp == 1);
 
         int y, m, d, h;
-        std::cout << "Enter deadline (format: YYYY MM DD HH): ";
-        std::cin >> y >> m >> d >> h;
+        bool validDate = false;
+        cout << "Enter deadline (format: YYYY MM DD HH): ";
+        do {
+            if (cin >> y >> m >> d >> h) {
+                if (y >= 2000 && y <= 2100 && m >= 1 && m <= 12 && 
+                    d >= 1 && d <= 31 && h >= 0 && h <= 23) {
+                    validDate = true;
+                } else {
+                    cout << "Invalid date or time. Please try again: ";
+                }
+            } else {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid input. Format: YYYY MM DD HH: ";
+            }
+        } while (!validDate);
+        
         deadline = Date(y, m, d, h);
-
-        std::cout << "Enter priority (1: High, 2: Medium, 3: Low): ";
-        std::cin >> priority;
-
-        std::cout << "Enter task status (1: Done, 2: In Progress, 3: Not Started): ";
-        std::cin >> status;
+        priority = safeIntInput("Enter priority (1: High, 2: Medium, 3: Low): ", 1, 3);
+        status = safeIntInput("Enter task status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
 
         delete name;
         delete category;
@@ -195,20 +237,13 @@ public:
         category = new std::string(tempCategory);
         completed = new bool(tempCompleted);
 
-        int subTaskCount;
-        std::cout << "Enter number of subtasks: ";
-        std::cin >> subTaskCount;
+        int subTaskCount = safeIntInput("Enter number of subtasks (0-10): ", 0, 10);
+        
         for (int i = 0; i < subTaskCount; ++i) {
             std::cout << "----- Enter details for subtask " << i+1 << " -----\n";
-            std::string stName, stCategory;
-            int stComp;
-            std::cout << "Enter subtask name: ";
-            std::cin.ignore();  
-            std::getline(std::cin, stName); 
-            std::cout << "Enter subtask category: ";
-            std::cin >> stCategory;
-            std::cout << "Is the subtask completed? (1: Yes, 0: No): ";
-            std::cin >> stComp;
+            std::string stName = safeStringInput("Enter subtask name: ");
+            std::string stCategory = safeStringInput("Enter subtask category: ");
+            int stComp = safeIntInput("Is the subtask completed? (1: Yes, 0: No): ", 0, 1);
             bool stCompleted = (stComp == 1);
             subTasks.push_back(new Basic_task(stName, stCategory, stCompleted));
         }
@@ -278,6 +313,7 @@ public:
             (*task)->show((*task)->getDeadline() - now <= 24);
             (*i)++;
         }
+        delete i; 
     }
 
     ~AllTasks() {
@@ -292,8 +328,12 @@ public:
     }
 
     void deleteTask(int index) {
-        delete alltask[index];
-        alltask.erase(alltask.begin() + index);
+        if (index >= 0 && index < alltask.size()) {
+            delete alltask[index];
+            alltask.erase(alltask.begin() + index);
+        } else {
+            cout << "Invalid index. No task deleted.\n";
+        }
     }
 
     const std::vector<MoreTask*>& insideData() {
@@ -305,13 +345,19 @@ public:
         
         vector<int> filters;
         string input;
-        cin.ignore();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, input);
         istringstream iss(input);
         int filter;
         while (iss >> filter) {
             if (filter >= 1 && filter <= 3)
                 filters.push_back(filter);
+        }
+        
+        if (filters.empty()) {
+            cout << "No valid filters entered. Showing all tasks.\n";
+            showAll();
+            return;
         }
 
         string categoryFilter;
@@ -322,23 +368,13 @@ public:
             switch (f) {
                 case 1: 
                     cout << "Enter category: ";
-                    getline(cin >> ws, categoryFilter);
+                    getline(cin, categoryFilter);
                     break;
                 case 2:
-                    cout << "Enter priority (1-3): ";
-                    while (!(cin >> priorityFilter) || priorityFilter < 1 || priorityFilter > 3) {
-                        cin.clear();
-                        cin.ignore(1000, '\n');
-                        cout << "Invalid priority! Enter again (1-3): ";
-                    }
+                    priorityFilter = safeIntInput("Enter priority (1: High, 2: Medium, 3: Low): ", 1, 3);
                     break;
                 case 3:
-                    cout << "Enter status (1-3): ";
-                    while (!(cin >> statusFilter) || statusFilter < 1 || statusFilter > 3) {
-                        cin.clear();
-                        cin.ignore(1000, '\n');
-                        cout << "Invalid status! Enter again (1-3): ";
-                    }
+                    statusFilter = safeIntInput("Enter status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
                     break;
             }
         }
@@ -356,6 +392,8 @@ public:
                   << "\tNotice\n";
         std::cout << std::string(120, '-') << "\n";
         Date now;
+        bool noMatches = true;
+        
         for (size_t i = 0; i < alltask.size(); ++i) {
             MoreTask* task = alltask[i];
             
@@ -370,7 +408,12 @@ public:
             if (match) {
                 cout << setw(10) << i;
                 task->show((task->getDeadline() - now <= 24));
+                noMatches = false;
             }
+        }
+        
+        if (noMatches) {
+            cout << "No tasks match the specified filters.\n";
         }
     }
 
@@ -382,6 +425,10 @@ public:
                 return (a->getDeadline() - b->getDeadline()) < 0;
             }
         });
+    }
+    
+    size_t size() const {
+        return alltask.size();
     }
 };
 
