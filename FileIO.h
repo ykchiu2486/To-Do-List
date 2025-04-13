@@ -20,7 +20,7 @@ public:
         if (!file->good()) {
             std::cerr << "Add a new task!\n" << std::endl;
             delete file;
-            return {};
+            return new vector<MoreTask*>(0);
         }
         int* taskCount = new int;
         *file >> *taskCount;
