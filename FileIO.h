@@ -15,7 +15,7 @@ public:
     ~Reader() {
         delete filename;
     }
-    std::vector<MoreTask*> read() {
+    std::vector<MoreTask*>* read() {
         std::ifstream* file = new std::ifstream(*this->filename);
         if (!file->good()) {
             std::cerr << "Add a new task!\n" << std::endl;
@@ -25,7 +25,7 @@ public:
         int* taskCount = new int;
         *file >> *taskCount;
         file->ignore();
-        std::vector<MoreTask*> tasks;
+        std::vector<MoreTask*>* tasks = new std::vector<MoreTask*>;
         while ((*taskCount)--) {
             std::string* name = new std::string();
             std::string* category = new std::string();
@@ -95,7 +95,7 @@ public:
             delete currentSubtaskCount;
             
             Date* tempDate = new Date(*y, *m, *d, *h);
-            tasks.push_back(new MoreTask(*name, *category, *completed, *tempDate, *priority, *status, *subtasks));
+            tasks->push_back(new MoreTask(*name, *category, *completed, *tempDate, *priority, *status, *subtasks));
             delete tempDate;
             
 

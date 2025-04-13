@@ -14,7 +14,7 @@
 
 using namespace std;
 
-int safeIntInput(const string& prompt, int min, int max) {
+int* safeIntInput(const string& prompt, int min, int max) {
     int* value = new int;
     bool* validInput = new bool(false);
     
@@ -29,10 +29,8 @@ int safeIntInput(const string& prompt, int min, int max) {
         }
     } while (!*validInput);
     
-    int result = *value;
-    delete value;
     delete validInput;
-    return result;
+    return value;
 }
 
 class MoreTask : public Basic_task {
@@ -167,19 +165,19 @@ public:
         std::cout << "Select field to modify:\n";
         std::cout << "1. Name\n2. Category\n3. Completion Status\n4. Deadline\n5. Priority\n6. Status\n7. Modify Subtasks\n0. Cancel\n";
         
-        int* choice = new int(safeIntInput("Your choice: ", 0, 7));
+        int* choice = safeIntInput("Your choice: ", 0, 7);
 
         switch(*choice) {
             case 1: { 
-                *name = safeStringInput("New Name: "); 
+                name = safeStringInput("New Name: "); 
                 break; 
             }            
             case 2: { 
-                *category = safeStringInput("New Category: "); 
+                category = safeStringInput("New Category: "); 
                 break; 
             }
             case 3: { 
-                int* comp = new int(safeIntInput("Completed (1: Yes, 0: No): ", 0, 1));
+                int* comp = safeIntInput("Completed (1: Yes, 0: No): ", 0, 1);
                 *completed = (*comp == 1); 
                 delete comp;
                 break; 
@@ -217,11 +215,11 @@ public:
                 break; 
             }
             case 5: { 
-                *priority = safeIntInput("New Priority (1: High, 2: Medium, 3: Low): ", 1, 3);
+                priority = safeIntInput("New Priority (1: High, 2: Medium, 3: Low): ", 1, 3);
                 break; 
             }
             case 6: { 
-                *status = safeIntInput("New Status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
+                status = safeIntInput("New Status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
                 break; 
             }
             case 7: {
@@ -229,12 +227,14 @@ public:
                     std::cout << "No subtasks available to modify.\n";
                 } else {
                     std::cout << "Select a subtask to modify:\n";
-                    for (size_t i = 0; i < subTasks->size(); ++i) {
-                        std::cout << i + 1 << ". ";
-                        (*subTasks)[i]->show();
+
+                    size_t* i = new size_t(0);
+                    for (; (*i) < subTasks->size(); ++(*i)) {
+                        std::cout << (*i) + 1 << ". ";
+                        (*subTasks)[*i]->show();
                     }
-                    
-                    int* subChoice = new int(safeIntInput("Enter subtask number (or 0 to cancel): ", 0, static_cast<int>(subTasks->size())));
+                    delete i;
+                    int* subChoice = safeIntInput("Enter subtask number (or 0 to cancel): ", 0, static_cast<int>(subTasks->size()));
                     
                     if (*subChoice > 0) {
                         (*subTasks)[*subChoice - 1]->modify();
@@ -260,9 +260,9 @@ public:
         }
         subTasks->clear();
 
-        std::string* tempName = new std::string(safeStringInput("Enter task name: "));
-        std::string* tempCategory = new std::string(safeStringInput("Enter task category: "));
-        int* comp = new int(safeIntInput("Is the task completed? (1: Yes, 0: No): ", 0, 1));
+        std::string* tempName = safeStringInput("Enter task name: ");
+        std::string* tempCategory = safeStringInput("Enter task category: ");
+        int* comp = safeIntInput("Is the task completed? (1: Yes, 0: No): ", 0, 1);
         bool* tempCompleted = new bool(*comp == 1);
         delete comp;
 
@@ -296,8 +296,8 @@ public:
         delete h;
         delete validDate;
         
-        *priority = safeIntInput("Enter priority (1: High, 2: Medium, 3: Low): ", 1, 3);
-        *status = safeIntInput("Enter task status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
+        priority = safeIntInput("Enter priority (1: High, 2: Medium, 3: Low): ", 1, 3);
+        status = safeIntInput("Enter task status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
 
         delete name;
         delete category;
@@ -306,13 +306,13 @@ public:
         category = tempCategory;
         completed = tempCompleted;
 
-        int* subTaskCount = new int(safeIntInput("Enter number of subtasks (0-10): ", 0, 10));
-        
-        for (int i = 0; i < *subTaskCount; ++i) {
-            std::cout << "----- Enter details for subtask " << i+1 << " -----\n";
-            std::string* stName = new std::string(safeStringInput("Enter subtask name: "));
-            std::string* stCategory = new std::string(safeStringInput("Enter subtask category: "));
-            int* stComp = new int(safeIntInput("Is the subtask completed? (1: Yes, 0: No): ", 0, 1));
+        int* subTaskCount = safeIntInput("Enter number of subtasks (0-10): ", 0, 10);
+        int* i = new int(0);
+        for (; *i < *subTaskCount; ++(*i)) {
+            std::cout << "----- Enter details for subtask " << (*i)+1 << " -----\n";
+            std::string* stName = safeStringInput("Enter subtask name: ");
+            std::string* stCategory = safeStringInput("Enter subtask category: ");
+            int* stComp = safeIntInput("Is the subtask completed? (1: Yes, 0: No): ", 0, 1);
             bool* stCompleted = new bool(*stComp == 1);
             delete stComp;
             
@@ -323,6 +323,7 @@ public:
             delete stCompleted;
         }
         delete subTaskCount;
+        delete i;
         std::cout << "Task created successfully!\n";
     }
 
@@ -340,9 +341,10 @@ public:
         
         if (!subTasks->empty()) {
             std::cout << "----- List of Subtasks -----\n";
-            for (size_t i = 0; i < subTasks->size(); ++i) {
-                std::cout << "Subtask " << i+1 << ":\n";
-                (*subTasks)[i]->show();
+            size_t* i = new size_t(0);
+            for (; *i < subTasks->size(); ++(*i)) {
+                std::cout << "Subtask " << (*i)+1 << ":\n";
+                (*subTasks)[*i]->show();
             }
         }
         std::cout << "==========================\n";
@@ -457,10 +459,10 @@ public:
                     getline(cin, *categoryFilter);
                     break;
                 case 2:
-                    *priorityFilter = safeIntInput("Enter priority (1: High, 2: Medium, 3: Low): ", 1, 3);
+                    priorityFilter = safeIntInput("Enter priority (1: High, 2: Medium, 3: Low): ", 1, 3);
                     break;
                 case 3:
-                    *statusFilter = safeIntInput("Enter status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
+                    statusFilter = safeIntInput("Enter status (1: Done, 2: In Progress, 3: Not Started): ", 1, 3);
                     break;
             }
         }
@@ -480,8 +482,9 @@ public:
         Date* now = new Date();
         bool* noMatches = new bool(true);
         
-        for (size_t i = 0; i < alltask->size(); ++i) {
-            MoreTask* task = (*alltask)[i];
+        size_t* i = new size_t(0); 
+        for (;*i < alltask->size(); (*i)++) {
+            MoreTask* task = (*alltask)[*i];
             
             bool* match = new bool(true);
             if (!categoryFilter->empty() && task->getCategory() != *categoryFilter)
@@ -492,13 +495,14 @@ public:
                 *match = false;
 
             if (*match) {
-                cout << setw(10) << i;
+                cout << setw(10) << *i;
                 task->show((task->getDeadline() - *now <= 24));
                 *noMatches = false;
             }
             delete match;
         }
-        
+        delete i;
+
         if (*noMatches) {
             cout << "No tasks match the specified filters.\n";
         }

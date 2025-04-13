@@ -11,19 +11,17 @@ class Basic_task {
         std::string* category;
         bool* completed;
         
-        std::string safeStringInput(const std::string& prompt) {
+        std::string* safeStringInput(const std::string& prompt) {
             std::string* input = new std::string();
             std::cout << prompt;
             if (std::cin.peek() == '\n') {
                 std::cin.ignore();
             }
             std::getline(std::cin, *input);
-            std::string result = *input;
-            delete input;
-            return result;
+            return input;
         }
         
-        bool safeBoolInput(const std::string& prompt) {
+        bool* safeBoolInput(const std::string& prompt) {
             int* value = new int;
             bool* validInput = new bool(false);
             do {
@@ -37,13 +35,13 @@ class Basic_task {
                 }
             } while (!*validInput);
             
-            bool result = (*value == 1);
+            bool* result = new bool(*value == 1);
             delete value;
             delete validInput;
             return result;
         }
         
-        int safeIntInput(const std::string& prompt, int min, int max) {
+        int* safeIntInput(const std::string& prompt, int min, int max) {
             int* value = new int;
             bool* validInput = new bool(false);
             do {
@@ -57,10 +55,8 @@ class Basic_task {
                 }
             } while (!*validInput);
             
-            int result = *value;
-            delete value;
             delete validInput;
-            return result;
+            return value;
         }
         
     public:
@@ -113,15 +109,15 @@ class Basic_task {
         virtual void modify() {
             std::cout << "Modify Basic Task:\n";
             std::cout << "1. Name\n2. Category\n3. Completion Status\n0. Cancel\n";
-            int* choice = new int(safeIntInput("Your choice: ", 0, 3));
+            int* choice = safeIntInput("Your choice: ", 0, 3);
             
             switch (*choice) {
                 case 1: {
-                    *name = safeStringInput("New Name: ");
+                    name = safeStringInput("New Name: ");
                     break;
                 }
                 case 2: {
-                    *category = safeStringInput("New Category: ");
+                    category = safeStringInput("New Category: ");
                     break;
                 }
                 case 3: {

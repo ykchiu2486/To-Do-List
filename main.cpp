@@ -7,7 +7,7 @@ using namespace std;
 
 AllTasks* read() {
     Reader* reader = new Reader("tasks.txt");
-    AllTasks* alltasks = new AllTasks(reader->read());
+    AllTasks* alltasks = new AllTasks(*(reader->read()));
     delete reader;
     return alltasks;
 }
