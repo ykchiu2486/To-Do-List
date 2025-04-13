@@ -64,17 +64,14 @@ public:
                 std::getline(*file >> std::ws, *subName);
                 if (!(*file >> *subCategory >> *subCompleted)) {
                     std::cerr << "Fail to read subtasks!\n" << std::endl;
-                    // 清理内存
                     delete subName;
                     delete subCategory;
                     delete subCompleted;
                     delete currentSubtaskCount;
-                    // 清理已创建的 subtasks
-                    for (auto subtask : *subtasks) {
-                        delete subtask;
+                    for(auto subtask = subtasks->begin(); subtask != subtasks->end(); subtask++) {
+                        delete *subtask;
                     }
                     delete subtasks;
-                    // 清理其他变量
                     delete name;
                     delete category;
                     delete completed;
@@ -97,13 +94,11 @@ public:
             }
             delete currentSubtaskCount;
             
-            // 創建臨時 Date 對象而不是直接使用 Date 構造函數
             Date* tempDate = new Date(*y, *m, *d, *h);
             tasks.push_back(new MoreTask(*name, *category, *completed, *tempDate, *priority, *status, *subtasks));
             delete tempDate;
             
-            // 現在 MoreTask 已擁有 subtasks 的副本，不應刪除 subtasks 向量本身
-            // 但也不應讓它指向的對象洩漏
+
             delete subtasks;
             
             delete name;
@@ -141,8 +136,8 @@ public:
             return;
         }
         *file << tasks.size() << "\n";
-        for(auto i : tasks) {
-            i->write(*file);
+        for(auto i = tasks.begin(); i != tasks.end(); i++) {
+            (*i)->write(*file);
         }
         file->close();
         delete file;

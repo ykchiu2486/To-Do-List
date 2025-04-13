@@ -51,9 +51,9 @@ public:
         this->priority = new int(priority);
         this->status = new int(status);
         this->subTasks = new std::vector<Basic_task*>();
-        
-        for (Basic_task* task : subTasks) {
-            this->subTasks->push_back(new Basic_task(*task));
+
+        for(auto task = subTasks.begin(); task != subTasks.end(); task++) {
+            this->subTasks->push_back(new Basic_task(**task));
         }
     }
 
@@ -63,8 +63,8 @@ public:
         this->priority = new int(*other.priority);
         this->status = new int(*other.status);
         this->subTasks = new std::vector<Basic_task*>();
-        
-        for (Basic_task* task : *other.subTasks) {
+
+        for(auto task = *other.subTasks->begin(); task != *other.subTasks->end(); task++) {
             this->subTasks->push_back(new Basic_task(*task));
         }
     }
@@ -83,8 +83,8 @@ public:
             delete deadline;
             delete priority;
             delete status;
-            
-            for (Basic_task* task : *subTasks) {
+
+            for(auto task = *subTasks->begin(); task != *subTasks->end(); task++) {
                 delete task;
             }
             subTasks->clear();
@@ -93,16 +93,16 @@ public:
             priority = new int(*other.priority);
             status = new int(*other.status);
             
-            for (Basic_task* task : *other.subTasks) {
-                subTasks->push_back(new Basic_task(*task));
+            for (auto it = other.subTasks->begin(); it != other.subTasks->end(); ++it) {
+                subTasks->push_back(new Basic_task(**it));
             }
         }
         return *this;
     }
 
     ~MoreTask() override {
-        for (Basic_task* task : *subTasks) {
-            delete task;
+        for (auto it = subTasks->begin(); it != subTasks->end(); ++it) {
+            delete *it;
         }
         delete subTasks;
         delete deadline;
@@ -114,8 +114,8 @@ public:
         out << *name << "\n" << *category << " " << (*completed ? "1" : "0") << " ";
         deadline->write(out);
         out << " " << *priority << " " << *status << " " << subTasks->size() << "\n";
-        for (auto task : *subTasks) {
-            task->write(out);
+        for (auto it = subTasks->begin(); it != subTasks->end(); ++it) {
+            (*it)->write(out);
         }
     }
 
@@ -255,8 +255,8 @@ public:
     }
 
     void makeNew() {
-        for (Basic_task* task : *subTasks) {
-            delete task;
+        for (auto it = subTasks->begin(); it != subTasks->end(); ++it) {
+            delete *it;
         }
         subTasks->clear();
 
@@ -394,8 +394,8 @@ public:
     }
 
     ~AllTasks() {
-        for (auto i : *alltask) {
-            delete i;
+        for (auto it = alltask->begin(); it != alltask->end(); ++it) {
+            delete *it;
         }
         alltask->clear();
         delete alltask;
@@ -403,8 +403,8 @@ public:
     
     AllTasks(std::vector<MoreTask*> tasks) {
         alltask = new std::vector<MoreTask*>();
-        for (MoreTask* task : tasks) {
-            alltask->push_back(task);
+        for (auto it = tasks.begin(); it != tasks.end(); ++it) {
+            alltask->push_back(*it);
         }
     }
 
@@ -449,9 +449,10 @@ public:
         int* priorityFilter = new int(-1);
         int* statusFilter = new int(-1);
 
-        for (int f : *filters) {
+        for (auto it = filters->begin(); it != filters->end(); ++it) {
+            int f = *it;
             switch (f) {
-                case 1: 
+                case 1:
                     cout << "Enter category: ";
                     getline(cin, *categoryFilter);
                     break;
