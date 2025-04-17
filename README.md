@@ -1,21 +1,25 @@
 # TODO LIST
+## GitHub
+For a more convenient way to explore the entire homework project, feel free to visit the __[GitHub repository](https://github.com/ykchiu2486/To-Do-List)__
+
+
 ## Features
 
-- **Task Organization**: Each task includes name, category, completion status, deadline, priority, and status
+1. **Task Organization**: Each task includes name, category, completion status, deadline, priority, and status
 
-- **Subtasks**: you can add some subtasks to your main tasks
+2. **Subtasks**: you can add some subtasks to your main tasks
 
-- **Priority Levels**: Assign __High__, __Medium__, or __Low__ priority to tasks
+3. **Priority Levels**: Assign __High__, __Medium__, or __Low__ priority to tasks
 
-- **Status Tracking**: Mark tasks as __Done__, __In Progress__, or __Not Started__
+4. **Status Tracking**: Mark tasks as __Done__, __In Progress__, or __Not Started__
 
-- **Deadline Notifications**: Visual indicators for tasks __due within 24 hours__
+5. **Deadline Notifications**: Visual indicators for tasks __due within 24 hours__
 
-- **Filtering**: Filter tasks by __category__, __priority__, or __status__
+6. **Filtering**: Filter tasks by __category__, __priority__, or __status__
 
-- **Automatic Sorting**: Tasks are automatically sorted by __priority__ and __deadline__
+7. **Automatic Sorting**: Tasks are automatically sorted by __priority__ and __deadline__
 
-- **Persistent Storage**: All tasks are __saved to file__ and __loaded on startup__
+8. **Persistent Storage**: All tasks are __saved to file__ and __loaded on startup__
 
 ## Usage
 
@@ -25,6 +29,8 @@ To compile and run the program:
 g++ -o todolist main.cpp
 ./todolist
 ```
+#### Notice
+I recommend to set your terminal encoding to __UTF-8__ to avoid character encoding issues.
 
 ### Commands
 
