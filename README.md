@@ -39,15 +39,15 @@ g++ -o todolist main.cpp
 
 ### Examples
 
-- To add a new task: `add` (then follow the prompts)
-- To modify the first task: `mod 0`
+- To add a new task: `add` ([explanation](#further-explanation))
+- To modify the first task: `mod 0`([explanation](#further-explanation))
 - To delete the second task: `rm 1`
 - To view details of the third task: `show 2`
-- To filter tasks: `filter` (then follow the prompts)
+- To filter tasks: `filter` ([explanation](#further-explanation))
 - To save and exit: `exit`
 
 ### Further explanation
-Once you use the `mod` and `filter` commands, you can follow the instructions that appear on the terminal.
+Once you use the`add` ,  `mod` and `filter` commands, you can follow the instructions that appear on the terminal.
 
 ## Task Properties<small> (MoreTask) </small>
 
