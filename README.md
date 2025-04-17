@@ -49,7 +49,7 @@ g++ -o todolist main.cpp
 ### Further explanation
 Once you use the `mod` and `filter` commands, you can follow the instructions that appear on the terminal.
 
-## Task Properties
+## Task Properties<small> (MoreTask) </small>
 
 - **Name<small> (string) </small>**: Task title
 - **Category<small> (string) </small>**: Task category
