@@ -44,7 +44,7 @@ int main() {
         }
         else if(*testcommand == "mod") {
             int* index = new int;
-            cin >> *index;
+            index = safeIntInput("", 0, alltasks->size() - 1);
             stage->clear();
             stage->banner();
             (*alltasks)[*index]->modify();
@@ -54,7 +54,7 @@ int main() {
         }
         else if(*testcommand == "rm") {
             int* index = new int;
-            cin >> *index;
+            index = safeIntInput("", 0, alltasks->size() - 1);
             alltasks->deleteTask(*index);
             stage->clear();
             alltasks->sort();
@@ -62,7 +62,7 @@ int main() {
         }
         else if(*testcommand == "show") {
             int* index = new int;
-            cin >> *index;
+            index = safeIntInput("", 0, alltasks->size() - 1);
             stage->clear();
             stage->banner();
             (*alltasks)[*index]->showThisTask();

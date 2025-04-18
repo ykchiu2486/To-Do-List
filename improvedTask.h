@@ -25,7 +25,7 @@ int* safeIntInput(const string& prompt, int min, int max) {
         } else {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter an integer between " << min << " and " << max << ".\n";
+            cout << "Invalid input. Please enter an integer between " << min << " and " << max << ":\n";
         }
     } while (!*validInput);
     
