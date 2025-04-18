@@ -40,14 +40,14 @@ public:
         delete hour;
     }
     
-    bool operator>(const Date& other) const {
+    bool operator>(const Date& other) const { // for AllTask::sort() to comapre
         if(*year != *other.year) return *year > *other.year;
         if(*month != *other.month) return *month > *other.month;
         if(*day != *other.day) return *day > *other.day;
         return *hour > *other.hour;
     }
     
-    int operator-(const Date& other) const {
+    int operator-(const Date& other) const { //For the noticer to use(within 24 hours)
         std::tm* a = new std::tm();
         a->tm_year = *year - 1900;
         a->tm_mon = *month - 1;
@@ -79,18 +79,18 @@ public:
         std::cout << *year << "-" << *month << "-" << *day << " " << *hour << ":00";
     }
     
-    void write(std::ostream& out) {
+    void write(std::ostream& out) { //for Writer::write()
         out << *year << " " << *month << " " << *day << " " << *hour << " ";
     }
 
-    Date(const Date& other) {
+    Date(const Date& other) { // copy constructor
         year = new int(*other.year);
         month = new int(*other.month);
         day = new int(*other.day);
         hour = new int(*other.hour);
     }
 
-    Date& operator=(const Date& other) {
+    Date& operator=(const Date& other) { // copy constructor
         if (this != &other) {
             *year = *other.year;
             *month = *other.month;

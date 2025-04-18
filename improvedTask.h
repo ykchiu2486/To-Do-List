@@ -108,7 +108,7 @@ public:
         delete status;
     }
 
-    void write(std::ofstream& out) {
+    void write(std::ofstream& out) { //for Write::write()
         out << *name << "\n" << *category << " " << (*completed ? "1" : "0") << " ";
         deadline->write(out);
         out << " " << *priority << " " << *status << " " << subTasks->size() << "\n";
@@ -117,7 +117,7 @@ public:
         }
     }
 
-    std::string getFormattedDeadline() const {
+    std::string getFormattedDeadline() const { //handle the format of the Date
         std::ostringstream* tempStream = new std::ostringstream();
         Date* tempDeadline = new Date(*deadline);  
         tempDeadline->write(*tempStream);
@@ -157,12 +157,12 @@ public:
                   << std::setw(20) << getFormattedDeadline()
                   << std::setw(10) << (*priority == 1 ? "High" : (*priority == 2 ? "Medium" : "Low"))
                   << std::setw(15) << (*status == 1 ? "Done" : (*status == 2 ? "In Progress" : "Not Started"))
-                  << std::setw(10) << subTasks->size() << (notice ? "\t*" : "")
+                  << std::setw(10) << subTasks->size() << (notice ? "\t*" : "") //if it's within 24 hours or less
                   << "\n";
     }
 
-    void modify() override {
-        std::cout << "Select field to modify:\n";
+    void modify() override { //override from Basic_task::modify()
+        std::cout << "Select field to modify:\n"; //user can only select one element to modify
         std::cout << "1. Name\n2. Category\n3. Completion Status\n4. Deadline\n5. Priority\n6. Status\n7. Modify Subtasks\n0. Cancel\n";
         
         int* choice = safeIntInput("Your choice: ", 0, 7);
@@ -254,7 +254,7 @@ public:
         return *deadline;
     }
 
-    void makeNew() {
+    void makeNew() { // let user to make a new MoreTask object
         for (auto it = subTasks->begin(); it != subTasks->end(); ++it) {
             delete *it;
         }
@@ -357,7 +357,7 @@ public:
 
 class AllTasks {
 private:
-    std::vector<MoreTask*>* alltask;
+    std::vector<MoreTask*>* alltask; //use vector to store all the Moretask object
 public:
 
     void add(MoreTask* task) {
@@ -410,7 +410,7 @@ public:
         }
     }
 
-    void deleteTask(int index) {
+    void deleteTask(int index) { //delete specific task
         if (index >= 0 && index < alltask->size()) {
             delete (*alltask)[index];
             alltask->erase(alltask->begin() + index);
@@ -423,7 +423,7 @@ public:
         return *this->alltask;
     }
 
-    void showByFilter() {
+    void showByFilter() { //filter can base on category priority and status
         cout << "Filter by (1: Category, 2: Priority, 3: Status): ";
         
         vector<int>* filters = new vector<int>();
@@ -437,7 +437,7 @@ public:
                 filters->push_back(*filter);
         }
         
-        if (filters->empty()) {
+        if (filters->empty()) { //actually it's kind of useless
             cout << "No valid filters entered. Showing all tasks.\n";
             delete iss;
             delete filter;
@@ -496,7 +496,7 @@ public:
 
             if (*match) {
                 cout << setw(10) << *i;
-                task->show((task->getDeadline() - *now <= 24));
+                task->show((task->getDeadline() - *now <= 24)); //the noticer 
                 *noMatches = false;
             }
             delete match;
@@ -518,7 +518,7 @@ public:
         delete statusFilter;
     }
 
-    void sort() {
+    void sort() { //first sort priority then is the date
         std::sort(alltask->begin(), alltask->end(), [](MoreTask* a, MoreTask* b) {
             if (a->getPriority() != b->getPriority()) {
                 return a->getPriority() < b->getPriority();

@@ -15,9 +15,9 @@ public:
     ~Reader() {
         delete filename;
     }
-    std::vector<MoreTask*>* read() {
+    std::vector<MoreTask*>* read() { // the most important part of this homework
         std::ifstream* file = new std::ifstream(*this->filename);
-        if (!file->good()) {
+        if (!file->good()) { //check whether file exist
             std::cerr << "Add a new task!\n" << std::endl;
             delete file;
             return new vector<MoreTask*>(0);
@@ -38,7 +38,7 @@ public:
             int* status = new int;
             int* subtaskCount = new int;
             std::getline(*file >> std::ws, *name);
-            if (!(*file >> *category >> *completed >> *y >> *m >> *d >> *h >> *priority >> *status >> *subtaskCount)) {
+            if (!(*file >> *category >> *completed >> *y >> *m >> *d >> *h >> *priority >> *status >> *subtaskCount)) { // if the txt file doesn't meet the format
                 std::cerr << "Fail to read tasks\n" << std::endl;
                 delete name;
                 delete category;
@@ -57,7 +57,7 @@ public:
             file->ignore();
             std::vector<Basic_task*>* subtasks = new std::vector<Basic_task*>();
             int* currentSubtaskCount = new int(*subtaskCount);
-            while ((*currentSubtaskCount)--) {
+            while ((*currentSubtaskCount)--) { //handle the  subtasks
                 std::string* subName = new std::string();
                 std::string* subCategory = new std::string();
                 bool* subCompleted = new bool;
@@ -118,7 +118,7 @@ public:
     }
 };
 
-class Writer {
+class Writer { //use other class's write() function
 private:
     std::string* filename;
 public:

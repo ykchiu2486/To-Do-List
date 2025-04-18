@@ -5,20 +5,20 @@
 #include <vector>
 using namespace std;
 
-AllTasks* read() {
+AllTasks* read() { //handle read in
     Reader* reader = new Reader("tasks.txt");
     AllTasks* alltasks = new AllTasks(*(reader->read()));
     delete reader;
     return alltasks;
 }
 
-void write(AllTasks* alltasks) {
+void write(AllTasks* alltasks) { //handle write into tasks.txt
     Writer* writer = new Writer("tasks.txt");
     writer->write(alltasks->insideData());
     delete writer;
 }
 
-void init(Stage* stage, AllTasks* alltasks) {
+void init(Stage* stage, AllTasks* alltasks) { //clear the terminal and show the banner
     stage->banner();
     stage->showTask(alltasks);
     stage->commandLine();

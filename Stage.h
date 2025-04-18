@@ -7,7 +7,7 @@
 #include "Date.h"
 using std::cout;
 
-class Stage {
+class Stage { // this object try to manage the apperance of the whole terminal
 private:
     void bigTitle() {
         cout << "████████╗ ██████╗ ██████╗  ██████╗     ██╗     ██╗███████╗████████╗\n";
@@ -42,7 +42,7 @@ public:
         tasks->showAll();
     }
 
-    void clear() {
+    void clear() { //clear the terminal and move the cursor to the top left
         cout << "\033[2J\033[H";
     }
 

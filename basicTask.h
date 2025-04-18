@@ -11,17 +11,17 @@ class Basic_task {
         std::string* category;
         bool* completed;
         
-        std::string* safeStringInput(const std::string& prompt) {
+        std::string* safeStringInput(const std::string& prompt) { //input-validation
             std::string* input = new std::string();
             std::cout << prompt;
-            if (std::cin.peek() == '\n') {
+            if (std::cin.peek() == '\n') { //read one line
                 std::cin.ignore();
             }
             std::getline(std::cin, *input);
             return input;
         }
         
-        bool* safeBoolInput(const std::string& prompt) {
+        bool* safeBoolInput(const std::string& prompt) { //input-validation
             int* value = new int;
             bool* validInput = new bool(false);
             do {
@@ -41,12 +41,12 @@ class Basic_task {
             return result;
         }
         
-        int* safeIntInput(const std::string& prompt, int min, int max) {
+        int* safeIntInput(const std::string& prompt, int min, int max) { //input-validation
             int* value = new int;
             bool* validInput = new bool(false);
             do {
                 std::cout << prompt;
-                if (std::cin >> *value && *value >= min && *value <= max) {
+                if (std::cin >> *value && *value >= min && *value <= max) { //check 
                     *validInput = true;
                 } else {
                     std::cin.clear();
@@ -96,7 +96,7 @@ class Basic_task {
             delete completed;
         }
         
-        void write(std::ofstream &out) {
+        void write(std::ofstream &out) { //for Writer::write()
             out << (*name) << "\n" << (*category) << " " << (*completed) << "\n";
         }
         
